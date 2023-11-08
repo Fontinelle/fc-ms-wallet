@@ -1,4 +1,4 @@
-package createaccount
+package create_account
 
 import (
 	"testing"
@@ -45,7 +45,7 @@ func TestCreateAccountUseCase_Execute(t *testing.T) {
 	accountMock.On("Save", mock.Anything).Return(nil)
 
 	uc := NewCreateAccountUseCase(accountMock, clientMock)
-	inputDto := &CreateAccountInputDto{
+	inputDto := CreateAccountInputDTO{
 		ClientID: client.ID,
 	}
 	output, err := uc.Execute(inputDto)

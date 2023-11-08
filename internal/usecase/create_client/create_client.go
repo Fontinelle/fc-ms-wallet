@@ -1,4 +1,4 @@
-package createclient
+package create_client
 
 import (
 	"time"
@@ -7,17 +7,17 @@ import (
 	"github.com/fontinelle/fc-ms-wallet/internal/gateway"
 )
 
-type CreateClientInputDto struct {
-	Name  string
-	Email string
+type CreateClientInputDTO struct {
+	Name  string `json:"name"`
+	Email string `json:"email"`
 }
 
-type CreateClientOutputDto struct {
+type CreateClientOutputDTO struct {
 	ID        string
 	Name      string
 	Email     string
 	CreatedAt time.Time
-	UpdateAt  time.Time
+	UpdatedAt time.Time
 }
 
 type CreateClientUseCase struct {
@@ -30,22 +30,22 @@ func NewCreateClientUseCase(clientGateway gateway.ClientGateway) *CreateClientUs
 	}
 }
 
-func (uc *CreateClientUseCase) Execute(inputDto *CreateClientInputDto) (*CreateClientOutputDto, error) {
-	client, err := entity.NewClient(inputDto.Name, inputDto.Email)
+func (uc *CreateClientUseCase) Execute(input CreateClientInputDTO) (*CreateClientOutputDTO, error) {
+	client, err := entity.NewClient(input.Name, input.Email)
 	if err != nil {
 		return nil, err
 	}
-
 	err = uc.ClientGateway.Save(client)
 	if err != nil {
 		return nil, err
 	}
 
-	return &CreateClientOutputDto{
+	output := &CreateClientOutputDTO{
 		ID:        client.ID,
 		Name:      client.Name,
 		Email:     client.Email,
 		CreatedAt: client.CreatedAt,
-		UpdateAt:  client.UpdatedAt,
-	}, nil
+		UpdatedAt: client.UpdatedAt,
+	}
+	return output, nil
 }

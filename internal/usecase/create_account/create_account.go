@@ -1,15 +1,15 @@
-package createaccount
+package create_account
 
 import (
 	"github.com/fontinelle/fc-ms-wallet/internal/entity"
 	"github.com/fontinelle/fc-ms-wallet/internal/gateway"
 )
 
-type CreateAccountInputDto struct {
-	ClientID string
+type CreateAccountInputDTO struct {
+	ClientID string `json:"client_id"`
 }
 
-type CreateAccountOutputDto struct {
+type CreateAccountOutputDTO struct {
 	ID string
 }
 
@@ -18,26 +18,25 @@ type CreateAccountUseCase struct {
 	ClientGateway  gateway.ClientGateway
 }
 
-func NewCreateAccountUseCase(accountGateway gateway.AccountGateway, clientGateway gateway.ClientGateway) *CreateAccountUseCase {
+func NewCreateAccountUseCase(a gateway.AccountGateway, c gateway.ClientGateway) *CreateAccountUseCase {
 	return &CreateAccountUseCase{
-		AccountGateway: accountGateway,
-		ClientGateway:  clientGateway,
+		AccountGateway: a,
+		ClientGateway:  c,
 	}
 }
 
-func (uc *CreateAccountUseCase) Execute(inputDto *CreateAccountInputDto) (*CreateAccountOutputDto, error) {
-	client, err := uc.ClientGateway.Get(inputDto.ClientID)
+func (uc *CreateAccountUseCase) Execute(input CreateAccountInputDTO) (*CreateAccountOutputDTO, error) {
+	client, err := uc.ClientGateway.Get(input.ClientID)
 	if err != nil {
 		return nil, err
 	}
-
 	account := entity.NewAccount(client)
 	err = uc.AccountGateway.Save(account)
 	if err != nil {
 		return nil, err
 	}
-
-	return &CreateAccountOutputDto{
+	output := &CreateAccountOutputDTO{
 		ID: account.ID,
-	}, nil
+	}
+	return output, nil
 }
