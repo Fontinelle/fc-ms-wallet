@@ -9,7 +9,7 @@ type TransactionCreated struct {
 
 func NewTransactionCreated() *TransactionCreated {
 	return &TransactionCreated{
-		Name: "transaction.created",
+		Name: "TransactionCreated",
 	}
 }
 
